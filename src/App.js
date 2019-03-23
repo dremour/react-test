@@ -9,6 +9,8 @@ import {
   InputGroup,
   Nav
 } from "react-bootstrap";
+import { Route, Link, withRouter } from "react-router-dom";
+import queryString from "query-string";
 
 class App extends Component {
   constructor(props) {
@@ -17,10 +19,11 @@ class App extends Component {
       isLoaded: false,
       goods: [],
       filteredList: [],
+      filteredByCategory: [],
       searchInput: "",
-      goodsCategories: []
+      goodsCategories: [],
+      currentCategory: ""
     };
-    this.filterGoods = this.filterGoods.bind(this);
     this.filterByCategory = this.filterByCategory.bind(this);
   }
 
@@ -29,33 +32,62 @@ class App extends Component {
       .then(res => res.json())
       .then(result => {
         let categories = result.products.map(item => item.bsr_category);
+        let currentName = queryString.parse(this.props.location.search).name;
+        console.log(currentName);
         this.setState({
           isLoaded: true,
           goods: result.products,
-          goodsCategories: categories
+          goodsCategories: ["All", ...categories]
         });
+
+        let { search, pathname } = this.props.location;
+        const params = search.slice(1);
+        pathname = pathname.slice(1);
+        const param = params.split("=");
+
+        this.setState({ searchInput: param[1], currentCategory: pathname });
+        debugger;
+        this.filterByCategory(pathname);
+        this.filterGoods(param[1] || "");
       });
   }
 
-  filterGoods(event) {
+  filterByCategory(category) {
+    debugger;
+    const currentCategory = category.split(" ").join("");
     let oldGoods = this.state.goods;
-    let updatedList = oldGoods.filter(
-      item =>
-        item.brand.toLowerCase().search(event.target.value.toLowerCase()) !== -1
-    );
+    let filteredByCategoryList =
+      category !== "All"
+        ? oldGoods.filter(
+            item => item.bsr_category.split(" ").join("") === currentCategory
+          )
+        : oldGoods;
     this.setState({
-      filteredList: updatedList,
-      searchInput: event.target.value
+      filteredByCategory: filteredByCategoryList,
+      filteredList: filteredByCategoryList,
+      currentCategory,
+      searchInput: ""
     });
   }
 
-  filterByCategory(category) {
-    let oldGoods = this.state.goods;
-    let filteredByCategoryList = oldGoods.filter(
-      item => item.bsr_category === category
+  filterGoods(value) {
+    let oldGoods =
+      this.state.currentCategory === "All"
+        ? this.state.goods
+        : this.state.filteredByCategory;
+    let updatedList = oldGoods.filter(
+      item => item.brand.toLowerCase().search(value.toLowerCase()) !== -1
     );
+
+    this.props.history.push({
+      search:
+        value.length > 0
+          ? "?" + new URLSearchParams({ name: value }).toString()
+          : ""
+    });
     this.setState({
-      filteredList: filteredByCategoryList
+      filteredList: updatedList,
+      searchInput: value
     });
   }
 
@@ -64,11 +96,14 @@ class App extends Component {
       goods,
       isLoaded,
       filteredList,
+      filteredByCategory,
       searchInput,
       goodsCategories
     } = this.state;
     let list =
-      filteredList.length < 1 && searchInput === "" ? goods : filteredList;
+      filteredList.length < 1 && searchInput === ""
+        ? filteredByCategory
+        : filteredList;
     let filteredCategories = [];
     for (let item of goodsCategories) {
       if (filteredCategories.indexOf(item) === -1) {
@@ -82,14 +117,15 @@ class App extends Component {
       return (
         <Container fluid={true}>
           <InputSearch
-            filterGoods={this.filterGoods}
-            searchInput={this.searchInput}
+            filterGoods={e => this.filterGoods(e.target.value)}
+            searchInput={searchInput}
           />
           <Row className="flex-nowrap">
             <NavigationFilter
               filteredCategories={filteredCategories}
               filterByCategory={this.filterByCategory}
             />
+
             <Goods list={list} />
           </Row>
         </Container>
@@ -102,9 +138,15 @@ const NavigationFilter = props => {
   return (
     <Nav className="flex-column">
       {props.filteredCategories.map((item, index) => (
-        <Nav.Link key={index} onClick={() => props.filterByCategory(item)}>
+        <Link
+          to={{
+            pathname: "/" + item.split(" ").join("")
+          }}
+          key={index}
+          onClick={() => props.filterByCategory(item)}
+        >
           {item}
-        </Nav.Link>
+        </Link>
       ))}
     </Nav>
   );
@@ -131,7 +173,7 @@ const Goods = props => {
     <Row className="w-100">
       {props.list.map((item, index) => (
         <Col key={index} md={3}>
-          <Card style={{ width: "18rem" }}>
+          <Card>
             <Card.Img variant="top" src={item.img} />
             <Card.Body>
               <Card.Title>{item.brand}</Card.Title>
@@ -145,4 +187,4 @@ const Goods = props => {
   );
 };
 
-export default App;
+export default withRouter(App);
