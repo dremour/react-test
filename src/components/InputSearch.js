@@ -1,7 +1,7 @@
 import React from "react";
 import { FormControl, InputGroup } from "react-bootstrap";
 
-const InputSearch = props => {
+const InputSearch = ({ searchInput, handleInput }) => {
   return (
     <InputGroup size="sm" className="mb-3">
       <InputGroup.Prepend>
@@ -10,8 +10,8 @@ const InputSearch = props => {
       <FormControl
         aria-label="Small"
         aria-describedby="inputGroup-sizing-sm"
-        onChange={props.filterGoods}
-        value={props.searchInput}
+        onChange={e => handleInput(e.target.value)}
+        value={searchInput}
       />
     </InputGroup>
   );

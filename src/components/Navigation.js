@@ -1,17 +1,20 @@
 import React from "react";
 import { Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 
-const NavigationFilter = props => {
+import { changeCategory } from "../redux/actions/index";
+
+const NavigationFilter = ({ filteredCategories, changeCategory }) => {
   return (
     <Nav className="flex-column">
-      {props.filteredCategories.map((item, index) => (
+      {filteredCategories.map((item, index) => (
         <Link
           to={{
             pathname: "/" + item.split(" ").join("")
           }}
           key={index}
-          onClick={() => props.filterByCategory(item)}
+          onClick={() => changeCategory(item)}
         >
           {item}
         </Link>
@@ -20,4 +23,7 @@ const NavigationFilter = props => {
   );
 };
 
-export default NavigationFilter;
+export default connect(
+  null,
+  { changeCategory }
+)(NavigationFilter);

@@ -1,10 +1,10 @@
 import React from "react";
 import { Card, Row, Col } from "react-bootstrap";
 
-const Goods = props => {
+const Goods = ({ list }) => {
   return (
     <Row className="w-100">
-      {props.list.map((item, index) => (
+      {list.map((item, index) => (
         <Col key={index} md={3}>
           <Card>
             <Card.Img variant="top" src={item.img} />
