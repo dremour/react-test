@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import NavigationFilter from "./components/Navigation";
 import InputSearch from "./components/InputSearch";
 import Goods from "./components/Goods";
-import { fetchProducts, filterGoods } from "./redux/actions/index";
+import { getProducts, filterGoods } from "./redux/actions/index";
 
 class App extends Component {
   constructor(props) {
@@ -22,13 +22,10 @@ class App extends Component {
           pathname: this.props.location.pathname,
           search: this.props.location.search
         });
-  }
-
-  componentDidMount() {
     let { search, pathname } = this.props.location;
     let currentName = queryString.parse(search).name;
     let currentPath = pathname.slice(1);
-    this.props.dispatch(fetchProducts(currentPath, currentName || ""));
+    this.props.dispatch(getProducts(currentPath || "All", currentName || ""));
   }
 
   handleInput(value) {
@@ -42,32 +39,18 @@ class App extends Component {
   }
 
   render() {
-    const {
-      goodsCategories,
-      isLoaded,
-      filteredByCategory,
-      filteredList,
-      searchInput
-    } = this.props;
-
-    let list =
-      filteredList.length < 1 && searchInput === ""
-        ? filteredByCategory
-        : filteredList;
+    const { isLoaded } = this.props;
 
     if (!isLoaded) {
       return <p>Loading...</p>;
     } else {
       return (
         <Container fluid={true}>
-          <InputSearch
-            searchInput={searchInput}
-            handleInput={this.handleInput}
-          />
+          <InputSearch handleInput={this.handleInput} />
           <Row className="flex-nowrap">
-            <NavigationFilter filteredCategories={goodsCategories} />
+            <NavigationFilter />
 
-            <Goods list={list} />
+            <Goods />
           </Row>
         </Container>
       );
@@ -76,13 +59,7 @@ class App extends Component {
 }
 
 const mapStateToProps = state => ({
-  goods: state.goods,
-  goodsCategories: state.goodsCategories,
-  isLoaded: state.isLoaded,
-  currentCategory: state.currentCategory,
-  filteredByCategory: state.filteredByCategory,
-  filteredList: state.filteredList,
-  searchInput: state.searchInput
+  isLoaded: state.isLoaded
 });
 
 export default connect(mapStateToProps)(withRouter(App));

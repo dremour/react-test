@@ -1,10 +1,15 @@
 import React from "react";
 import { Card, Row, Col } from "react-bootstrap";
+import { connect } from "react-redux";
 
-const Goods = ({ list }) => {
+const Goods = ({ searchInput, filteredList, filteredByCategory }) => {
+  let newList =
+    filteredList.length < 1 && searchInput === ""
+      ? filteredByCategory
+      : filteredList;
   return (
-    <Row className="w-100">
-      {list.map((item, index) => (
+    <Row className="w-100 m-0">
+      {newList.map((item, index) => (
         <Col key={index} md={3}>
           <Card>
             <Card.Img variant="top" src={item.img} />
@@ -20,4 +25,10 @@ const Goods = ({ list }) => {
   );
 };
 
-export default Goods;
+const mapStateToProps = state => ({
+  searchInput: state.searchInput,
+  filteredList: state.filteredList,
+  filteredByCategory: state.filteredByCategory
+});
+
+export default connect(mapStateToProps)(Goods);

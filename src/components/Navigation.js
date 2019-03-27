@@ -5,16 +5,21 @@ import { connect } from "react-redux";
 
 import { changeCategory } from "../redux/actions/index";
 
-const NavigationFilter = ({ filteredCategories, changeCategory }) => {
+const NavigationFilter = ({ goodsCategories, changeCategory }) => {
+  const linkStyle = {
+    whiteSpace: "nowrap"
+  };
   return (
-    <Nav className="flex-column">
-      {filteredCategories.map((item, index) => (
+    <Nav className="flex-column mx-3">
+      <h2>Categories</h2>
+      {goodsCategories.map((item, index) => (
         <Link
           to={{
             pathname: "/" + item.split(" ").join("")
           }}
           key={index}
           onClick={() => changeCategory(item)}
+          style={linkStyle}
         >
           {item}
         </Link>
@@ -23,7 +28,11 @@ const NavigationFilter = ({ filteredCategories, changeCategory }) => {
   );
 };
 
+const mapStateToProps = state => ({
+  goodsCategories: state.goodsCategories
+});
+
 export default connect(
-  null,
+  mapStateToProps,
   { changeCategory }
 )(NavigationFilter);

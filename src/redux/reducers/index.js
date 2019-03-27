@@ -1,7 +1,8 @@
 import {
-  FETCH_PRODUCTS_SUCCESS,
+  GET_PRODUCTS,
   CHANGE_CATEGORY,
-  FILTER_GOODS
+  FILTER_GOODS,
+  RECEIVED_PRODUCTS
 } from "../constants/action-types";
 
 const initialState = {
@@ -16,18 +17,25 @@ const initialState = {
 
 function rootReducer(state = initialState, action) {
   switch (action.type) {
-    case FETCH_PRODUCTS_SUCCESS:
-      let categories = action.payload.products.map(item => item.bsr_category);
+    case GET_PRODUCTS:
+      return {
+        ...state,
+        isLoaded: false
+      };
+
+    case RECEIVED_PRODUCTS:
+      let categories = action.json.map(item => item.bsr_category);
       let filteredCategories = [];
       for (let item of categories) {
         if (filteredCategories.indexOf(item) === -1) {
           filteredCategories.push(item);
         }
       }
+
       return {
         ...state,
         isLoaded: true,
-        goods: action.payload.products,
+        goods: action.json,
         goodsCategories: ["All", ...filteredCategories]
       };
 

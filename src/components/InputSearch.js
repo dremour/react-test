@@ -1,9 +1,10 @@
 import React from "react";
 import { FormControl, InputGroup } from "react-bootstrap";
+import { connect } from "react-redux";
 
 const InputSearch = ({ searchInput, handleInput }) => {
   return (
-    <InputGroup size="sm" className="mb-3">
+    <InputGroup size="sm" className="my-3">
       <InputGroup.Prepend>
         <InputGroup.Text id="inputGroup-sizing-sm">Search</InputGroup.Text>
       </InputGroup.Prepend>
@@ -17,4 +18,8 @@ const InputSearch = ({ searchInput, handleInput }) => {
   );
 };
 
-export default InputSearch;
+const mapStateToProps = state => ({
+  searchInput: state.searchInput
+});
+
+export default connect(mapStateToProps)(InputSearch);
