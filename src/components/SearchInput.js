@@ -2,7 +2,7 @@ import React from "react";
 import { FormControl, InputGroup } from "react-bootstrap";
 import { connect } from "react-redux";
 
-const InputSearch = ({ searchInput, handleInput }) => {
+const SearchInput = ({ searchInputValue, handleInput }) => {
   return (
     <InputGroup size="sm" className="my-3">
       <InputGroup.Prepend>
@@ -12,14 +12,14 @@ const InputSearch = ({ searchInput, handleInput }) => {
         aria-label="Small"
         aria-describedby="inputGroup-sizing-sm"
         onChange={e => handleInput(e.target.value)}
-        value={searchInput}
+        value={searchInputValue}
       />
     </InputGroup>
   );
 };
 
 const mapStateToProps = state => ({
-  searchInput: state.searchInput
+  searchInputValue: state.searchInputValue
 });
 
-export default connect(mapStateToProps)(InputSearch);
+export default connect(mapStateToProps)(SearchInput);

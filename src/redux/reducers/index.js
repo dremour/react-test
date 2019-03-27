@@ -1,17 +1,17 @@
 import {
   GET_PRODUCTS,
-  CHANGE_CATEGORY,
-  FILTER_GOODS,
-  RECEIVED_PRODUCTS
+  FILTER_BY_CATEGORY,
+  FILTER_BY_NAME,
+  PRODUCTS_RECEIVED
 } from "../constants/action-types";
 
 const initialState = {
   isLoaded: false,
-  searchInput: "",
+  searchInputValue: "",
   currentCategory: "",
-  goods: [],
+  receivedGoods: [],
   filteredByCategory: [],
-  filteredList: [],
+  filteredByName: [],
   goodsCategories: []
 };
 
@@ -23,7 +23,7 @@ function rootReducer(state = initialState, action) {
         isLoaded: false
       };
 
-    case RECEIVED_PRODUCTS:
+    case PRODUCTS_RECEIVED:
       let categories = action.json.map(item => item.bsr_category);
       let filteredCategories = [];
       for (let item of categories) {
@@ -35,31 +35,31 @@ function rootReducer(state = initialState, action) {
       return {
         ...state,
         isLoaded: true,
-        goods: action.json,
+        receivedGoods: action.json,
         goodsCategories: ["All", ...filteredCategories]
       };
 
-    case CHANGE_CATEGORY:
+    case FILTER_BY_CATEGORY:
       const currentCategory = action.category.split(" ").join("");
-      let { goods } = state;
+      let { receivedGoods } = state;
       let filteredByCategoryList =
         currentCategory !== "All"
-          ? goods.filter(
+          ? receivedGoods.filter(
               item => item.bsr_category.split(" ").join("") === currentCategory
             )
-          : goods;
+          : receivedGoods;
       return {
         ...state,
         currentCategory,
         filteredByCategory: filteredByCategoryList,
-        filteredList: filteredByCategoryList,
-        searchInput: ""
+        filteredByName: filteredByCategoryList,
+        searchInputValue: ""
       };
 
-    case FILTER_GOODS:
+    case FILTER_BY_NAME:
       let oldGoods =
         state.currentCategory === "All"
-          ? state.goods
+          ? state.receivedGoods
           : state.filteredByCategory;
       const { value } = action;
       let filteredByNameList = oldGoods.filter(
@@ -67,8 +67,8 @@ function rootReducer(state = initialState, action) {
       );
       return {
         ...state,
-        filteredList: filteredByNameList,
-        searchInput: value
+        filteredByName: filteredByNameList,
+        searchInputValue: value
       };
 
     default:

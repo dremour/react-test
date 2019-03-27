@@ -4,10 +4,10 @@ import { withRouter } from "react-router-dom";
 import queryString from "query-string";
 import { connect } from "react-redux";
 
-import NavigationFilter from "./components/Navigation";
-import InputSearch from "./components/InputSearch";
-import Goods from "./components/Goods";
-import { getProducts, filterGoods } from "./redux/actions/index";
+import CategoriesList from "./components/CategoriesList";
+import SearchInput from "./components/SearchInput";
+import GoodsList from "./components/GoodsList";
+import { getProducts, filterByName } from "./redux/actions/index";
 
 class App extends Component {
   constructor(props) {
@@ -29,7 +29,7 @@ class App extends Component {
   }
 
   handleInput(value) {
-    this.props.dispatch(filterGoods(value));
+    this.props.dispatch(filterByName(value));
     this.props.history.push({
       search:
         value.length > 0
@@ -46,11 +46,11 @@ class App extends Component {
     } else {
       return (
         <Container fluid={true}>
-          <InputSearch handleInput={this.handleInput} />
+          <SearchInput handleInput={this.handleInput} />
           <Row className="flex-nowrap">
-            <NavigationFilter />
+            <CategoriesList />
 
-            <Goods />
+            <GoodsList />
           </Row>
         </Container>
       );

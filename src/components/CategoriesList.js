@@ -3,9 +3,9 @@ import { Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
-import { changeCategory } from "../redux/actions/index";
+import { filterByCategory } from "../redux/actions/index";
 
-const NavigationFilter = ({ goodsCategories, changeCategory }) => {
+const CategoriesList = ({ goodsCategories, filterByCategory }) => {
   const linkStyle = {
     whiteSpace: "nowrap"
   };
@@ -18,7 +18,7 @@ const NavigationFilter = ({ goodsCategories, changeCategory }) => {
             pathname: "/" + item.split(" ").join("")
           }}
           key={index}
-          onClick={() => changeCategory(item)}
+          onClick={() => filterByCategory(item)}
           style={linkStyle}
         >
           {item}
@@ -34,5 +34,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { changeCategory }
-)(NavigationFilter);
+  { filterByCategory }
+)(CategoriesList);

@@ -1,23 +1,21 @@
 import {
   GET_PRODUCTS,
-  CHANGE_CATEGORY,
-  FILTER_GOODS
+  FILTER_BY_CATEGORY,
+  FILTER_BY_NAME
 } from "../constants/action-types";
 
-export const getProducts = (category, name) => {
-  return {
-    type: GET_PRODUCTS,
-    currentCategory: category,
-    searchInput: name
-  };
-};
+export const getProducts = (category, name) => ({
+  type: GET_PRODUCTS,
+  currentCategory: category,
+  searchInput: name
+});
 
-export const changeCategory = category => ({
-  type: CHANGE_CATEGORY,
+export const filterByCategory = category => ({
+  type: FILTER_BY_CATEGORY,
   category
 });
 
-export const filterGoods = value => ({
-  type: FILTER_GOODS,
+export const filterByName = value => ({
+  type: FILTER_BY_NAME,
   value
 });
