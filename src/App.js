@@ -3,6 +3,7 @@ import { Row, Container } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
 import queryString from "query-string";
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
 import CategoriesList from "./components/CategoriesList";
 import SearchInput from "./components/SearchInput";
@@ -10,12 +11,11 @@ import GoodsList from "./components/GoodsList";
 import { getProducts, filterByName } from "./redux/actions/index";
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.handleInput = this.handleInput.bind(this);
+  componentDidMount() {
+    this.setAllCategory();
   }
 
-  componentWillMount() {
+  setAllCategory = () => {
     const { location, history, getProducts } = this.props;
     location.pathname === "/"
       ? history.push("/All")
@@ -27,15 +27,15 @@ class App extends Component {
     let currentName = queryString.parse(search).name;
     let currentCategory = pathname.slice(1);
     getProducts(currentCategory || "All", currentName || "");
-  }
+  };
 
-  handleInput(value) {
+  handleInput = value => {
     const { filterByName, history } = this.props;
     filterByName(value);
     history.push({
       search: value.length > 0 ? "?" + new URLSearchParams({ name: value }) : ""
     });
-  }
+  };
 
   render() {
     const { isLoaded } = this.props;
@@ -56,6 +56,12 @@ class App extends Component {
     }
   }
 }
+
+App.propTypes = {
+  isLoaded: PropTypes.bool,
+  filterByName: PropTypes.func,
+  getProducts: PropTypes.func
+};
 
 const mapStateToProps = state => ({
   isLoaded: state.isLoaded

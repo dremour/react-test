@@ -1,6 +1,7 @@
 import React from "react";
 import { FormControl, InputGroup } from "react-bootstrap";
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
 const SearchInput = ({ searchInputValue, handleInput }) => {
   return (
@@ -16,6 +17,11 @@ const SearchInput = ({ searchInputValue, handleInput }) => {
       />
     </InputGroup>
   );
+};
+
+SearchInput.propTypes = {
+  searchInputValue: PropTypes.string,
+  handleInput: PropTypes.func
 };
 
 const mapStateToProps = state => ({

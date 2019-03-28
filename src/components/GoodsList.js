@@ -2,10 +2,15 @@ import React from "react";
 import { Row } from "react-bootstrap";
 import { connect } from "react-redux";
 import Goods from "./Goods";
+import PropTypes from "prop-types";
 
-const GoodsList = ({ searchInput, filteredByName, filteredByCategory }) => {
+const GoodsList = ({
+  searchInputValue,
+  filteredByName,
+  filteredByCategory
+}) => {
   let newList =
-    filteredByName.length < 1 && searchInput === ""
+    filteredByName.length < 1 && searchInputValue === ""
       ? filteredByCategory
       : filteredByName;
   return (
@@ -23,8 +28,14 @@ const GoodsList = ({ searchInput, filteredByName, filteredByCategory }) => {
   );
 };
 
+GoodsList.propTypes = {
+  searchInputValue: PropTypes.string,
+  filteredByName: PropTypes.array,
+  filteredByCategory: PropTypes.array
+};
+
 const mapStateToProps = state => ({
-  searchInput: state.searchInput,
+  searchInputValue: state.searchInputValue,
   filteredByName: state.filteredByName,
   filteredByCategory: state.filteredByCategory
 });

@@ -3,6 +3,7 @@ import { Nav } from "react-bootstrap";
 import { connect } from "react-redux";
 
 import CategoryLink from "./CategoryLink";
+import PropTypes from "prop-types";
 
 const CategoriesList = ({ goodsCategories }) => {
   return (
@@ -13,6 +14,10 @@ const CategoriesList = ({ goodsCategories }) => {
       ))}
     </Nav>
   );
+};
+
+CategoriesList.propTypes = {
+  goodsCategories: PropTypes.array
 };
 
 const mapStateToProps = state => ({
