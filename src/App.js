@@ -16,25 +16,24 @@ class App extends Component {
   }
 
   componentWillMount() {
-    this.props.location.pathname === "/"
-      ? this.props.history.push("/All")
-      : this.props.history.push({
-          pathname: this.props.location.pathname,
-          search: this.props.location.search
+    const { location, history, getProducts } = this.props;
+    location.pathname === "/"
+      ? history.push("/All")
+      : history.push({
+          pathname: location.pathname,
+          search: location.search
         });
-    let { search, pathname } = this.props.location;
+    let { search, pathname } = location;
     let currentName = queryString.parse(search).name;
-    let currentPath = pathname.slice(1);
-    this.props.dispatch(getProducts(currentPath || "All", currentName || ""));
+    let currentCategory = pathname.slice(1);
+    getProducts(currentCategory || "All", currentName || "");
   }
 
   handleInput(value) {
-    this.props.dispatch(filterByName(value));
-    this.props.history.push({
-      search:
-        value.length > 0
-          ? "?" + new URLSearchParams({ name: value }).toString()
-          : ""
+    const { filterByName, history } = this.props;
+    filterByName(value);
+    history.push({
+      search: value.length > 0 ? "?" + new URLSearchParams({ name: value }) : ""
     });
   }
 
@@ -62,4 +61,12 @@ const mapStateToProps = state => ({
   isLoaded: state.isLoaded
 });
 
-export default connect(mapStateToProps)(withRouter(App));
+const mapActionsToProps = {
+  filterByName,
+  getProducts
+};
+
+export default connect(
+  mapStateToProps,
+  mapActionsToProps
+)(withRouter(App));

@@ -24,7 +24,8 @@ function rootReducer(state = initialState, action) {
       };
 
     case PRODUCTS_RECEIVED:
-      let categories = action.json.map(item => item.bsr_category);
+      let { products } = action;
+      let categories = products.map(item => item.bsr_category);
       let filteredCategories = [];
       for (let item of categories) {
         if (filteredCategories.indexOf(item) === -1) {
@@ -35,7 +36,7 @@ function rootReducer(state = initialState, action) {
       return {
         ...state,
         isLoaded: true,
-        receivedGoods: action.json,
+        receivedGoods: products,
         goodsCategories: ["All", ...filteredCategories]
       };
 

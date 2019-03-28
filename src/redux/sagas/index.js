@@ -14,7 +14,7 @@ function* fetchProducts(action) {
   const json = yield fetch("https://demo3907346.mockable.io/products").then(
     response => response.json()
   );
-  yield put({ type: PRODUCTS_RECEIVED, json: json.products });
+  yield put({ type: PRODUCTS_RECEIVED, products: json.products });
   yield put({ type: FILTER_BY_CATEGORY, category: action.currentCategory });
   yield put({ type: FILTER_BY_NAME, value: action.searchInput });
 }
